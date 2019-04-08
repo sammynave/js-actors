@@ -1,10 +1,10 @@
 export const field = {
   init() {
-    const w = '300px';
-    const h = '300px';
+    const w = '300';
+    const h = '600';
     const fieldEl = document.getElementById('field');
-    fieldEl.style.width = w;
-    fieldEl.style.height = h;
+    fieldEl.width = w;
+    fieldEl.height = h;
 
     return {
       width: w,

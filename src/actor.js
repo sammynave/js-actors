@@ -41,6 +41,7 @@ export const Actor = {
    */
   send(channel, message) {
     const emit = () => mailbox.emit(channel, message);
-    return new Promise(r => r()).then(emit);
+    // enque microtask
+    return Promise.resolve().then(emit);
   }
 };

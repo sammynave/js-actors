@@ -1,39 +1,46 @@
 import { Actor } from '../../src/index';
 import { collision } from './location';
 
-const SPEED = 3;
+const SPEED = 1;
 
-const cube1State = {
-  color: 'aaafff',
-  direction: 1,
-  speed: SPEED,
-  coord: {
-    x: 0,
-    y: 0,
-    w: 10,
-    h: 10
-  },
-};
+const randomHex = () =>  Math.floor(Math.random()*16777215).toString(16);
 
-const cube2State = {
-  color: '000000',
-  direction: -1,
-  speed: SPEED,
-  coord: {
-    x: 290,
-    y: 0,
-    w: 10,
-    h: 10
-  }
+const cubePairMaker = (i) => {
+  return [
+    Actor.create(cube, {
+      color: randomHex(),
+      direction: 1,
+      speed: Math.floor(Math.random()*10) + 1,
+      coord: {
+        x: 0,
+        y: 2 * i,
+        w: 5,
+        h: 5
+      },
+    }),
+    Actor.create(cube, {
+      color: randomHex(),
+      direction: -1,
+      speed: Math.floor(Math.random()*10) + 1,
+      coord: {
+        x: 290,
+        y: 2 * i,
+        w: 5,
+        h: 5
+      }
+    })
+  ]
 };
 
 const collisonDetector = Actor.create(collision);
 
 export const cubes = {
   init() {
-    const cube1 = Actor.create(cube, cube1State);
-    const cube2 = Actor.create(cube, cube2State);
-    return [cube1, cube2];
+    let cs = [];
+    for (let i = 0; i < 60; i++) {
+      cs = cs.concat(cubePairMaker(i));
+    }
+    return cs;
   },
 
   attach(state, ctx) {
@@ -108,6 +115,9 @@ export const cube = {
     );
 
     state.ctx.restore();
+
+    Actor.send(collisonDetector, ['didMove', { move }]);
+
     return move;
   }
 };

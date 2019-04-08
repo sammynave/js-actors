@@ -12,12 +12,9 @@ Actor.send(cubes,
    document.getElementById('field')
            .getContext('2d')]);
 
-const a = setInterval(() => {
+setInterval(() => {
   Actor.send(time, ['advance']);
-}, 1);
-
-// setTimeout(() => window.clearInterval(a), 2000);
-
+}, 10);
 
 
 // each actor gets a hex color, direction and speed
