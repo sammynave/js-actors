@@ -2,6 +2,7 @@ import { Actor } from '../../src/index';
 import { collision } from './location';
 
 const SPEED = 1;
+const NUM_OF_PAIRS = 500;
 
 const randomHex = () =>  Math.floor(Math.random()*16777215).toString(16);
 
@@ -14,8 +15,8 @@ const cubePairMaker = (i) => {
       coord: {
         x: 0,
         y: 2 * i,
-        w: 5,
-        h: 5
+        w: 4,
+        h: 4
       },
     }),
     Actor.create(cube, {
@@ -25,8 +26,8 @@ const cubePairMaker = (i) => {
       coord: {
         x: 290,
         y: 2 * i,
-        w: 5,
-        h: 5
+        w: 4,
+        h: 4
       }
     })
   ]
@@ -37,7 +38,7 @@ const collisonDetector = Actor.create(collision);
 export const cubes = {
   init() {
     let cs = [];
-    for (let i = 0; i < 60; i++) {
+    for (let i = 0; i < NUM_OF_PAIRS; i++) {
       cs = cs.concat(cubePairMaker(i));
     }
     return cs;

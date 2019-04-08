@@ -33,23 +33,20 @@ export const collision = {
       return state;
     }
 
-    // TODO: this is slow
-    const didCollide = [...state.occupied.entries()].reduce((acc, v) => {
-      if (acc) {
-        return acc;
-      }
-
-      if (v[0] !== move.self) {
-        if (v[1].x < move.coord.x + move.coord.w &&
-            v[1].x + v[1].w > move.coord.x &&
-            v[1].y < move.coord.y + move.coord.h &&
-            v[1].y + v[1].h > move.coord.y) {
-          return true;
+    let didCollide = false;
+    for (let opts of state.occupied) {
+      if (!opts) { break; }
+      const [id, coords] = opts;
+      if (id !== move.self) {
+        if (coords.x < move.coord.x + move.coord.w &&
+          coords.x + coords.w > move.coord.x &&
+          coords.y < move.coord.y + move.coord.h &&
+          coords.y + coords.h > move.coord.y) {
+          didCollide = true;
+          break;
         }
       }
-
-      return acc;
-    }, false);
+    };
 
     if (didCollide) {
       const old = move.coord.x;
