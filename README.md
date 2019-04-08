@@ -1,1 +1,3 @@
-`npx degit sammynave/rollup-libkit new-project-name`
+simple actor model.
+
+`yarn dev` to run demo site.
