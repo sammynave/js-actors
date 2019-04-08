@@ -1,8 +1,5 @@
 {
   "name": "test-site",
-  "scripts": {
-    "dev": "webpack && webpack-dev-server --host 0.0.0.0"
-  },
   "devDependencies": {
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
@@ -12,7 +9,8 @@
     "webpack-dev-server": "latest"
   },
   "scripts": {
-    "dev": "webpack && webpack-dev-server --host 0.0.0.0"
+    "dev": "webpack && webpack-dev-server --host 0.0.0.0",
+    "start": "webpack"
   },
   "browserslist": "> 0.25%, not dead"
 }

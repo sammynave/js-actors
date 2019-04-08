@@ -4,8 +4,6 @@ import { collision } from './collision';
 const SPEED = 1;
 const NUM_OF_PAIRS = 100;
 
-let logs = 0;
-
 const randomHex = () =>  Math.floor(Math.random()*16777215).toString(16);
 
 const bad = {
@@ -111,11 +109,6 @@ export const cube = {
       self: state.self,
       ctx: state.ctx
     };
-
-    if (logs < 4) {
-      console.log(move);
-      logs++;
-    }
 
     Actor.send(collisonDetector,
       ['validateMove', {

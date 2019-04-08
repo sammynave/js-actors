@@ -9,10 +9,7 @@ const outputFile = libraryName + '.js';
 const config = {
   mode: 'production',
   entry: __dirname + '/src/index.js',
-  devtool: 'inline-source-map',
-  optimization: {
-    minimize: false
-  },
+  devtool: 'source-map',
   output: {
     path: __dirname + '/dist',
     filename: outputFile,
