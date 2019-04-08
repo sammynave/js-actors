@@ -6,10 +6,14 @@ const pkg = require('./package.json');
 const libraryName = pkg.name;
 const outputFile = libraryName + '.js';
 
+const mode = 'production';
+
 const config = {
-  mode: 'production',
+  mode,
   entry: __dirname + '/src/index.js',
-  devtool: 'source-map',
+
+  devtool: mode === 'production' ? 'source-map' : 'inline-source-map',
+
   output: {
     path: __dirname + '/dist',
     filename: outputFile,

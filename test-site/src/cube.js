@@ -1,8 +1,8 @@
-import { Actor } from '../../src/index';
+import { Actor, WebActor } from '../../src/index';
 import { collision } from './collision';
 
 const SPEED = 1;
-const NUM_OF_PAIRS = 100;
+const NUM_OF_PAIRS = 1;
 
 const randomHex = () =>  Math.floor(Math.random()*16777215).toString(16);
 
@@ -48,7 +48,7 @@ const cubePairMaker = (i) => {
   ]
 };
 
-const collisonDetector = Actor.create(collision);
+const collisionDetector = WebActor.create(collision, { hi: 'hello' });
 
 export const cubes = {
   init() {
@@ -110,7 +110,7 @@ export const cube = {
       ctx: state.ctx
     };
 
-    Actor.send(collisonDetector,
+    WebActor.send(collisionDetector,
       ['validateMove', {
         self: move.self,
         x: move.coord.x,
@@ -157,7 +157,7 @@ export const cube = {
 
     state.ctx.restore();
 
-    Actor.send(collisonDetector, ['didMove', {
+    WebActor.send(collisionDetector, ['didMove', {
       self: state.self,
       direction: state.nextMove.direction,
       x: state.nextMove.coord.x,
@@ -189,7 +189,7 @@ export const cube = {
     );
 
     state.ctx.restore();
-    Actor.send(collisonDetector, ['didMove', {
+    WebActor.send(collisionDetector, ['didMove', {
       self: state.self,
       direction: state.nextMove.direction,
       x: state.nextMove.coord.x,
@@ -219,7 +219,7 @@ export const cube = {
 
     state.ctx.restore();
 
-    Actor.send(collisonDetector, ['didMove', {
+    WebActor.send(collisionDetector, ['didMove', {
       self: state.self,
       direction: state.nextMove.direction,
       x: state.nextMove.coord.x,
