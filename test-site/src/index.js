@@ -14,6 +14,6 @@ Actor.send(cubes,
 
 const a = setInterval(() => {
   Actor.send(time, ['advance']);
-}, 10);
+}, 1000);
 
 window.stop = () => clearInterval(a);

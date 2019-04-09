@@ -1,8 +1,9 @@
 import { Actor } from '../../src/index';
-import { collision } from './collision';
+import { collision, collisionWorker } from './collision';
 
+const WEB_WORKER = true;
 const SPEED = 1;
-const NUM_OF_PAIRS = 100;
+const NUM_OF_PAIRS = 1;
 
 const randomHex = () =>  Math.floor(Math.random()*16777215).toString(16);
 
@@ -48,7 +49,7 @@ const cubePairMaker = (i) => {
   ]
 };
 
-const collisonDetector = Actor.create(collision);
+const collisionDetector = Actor.create(collision);
 
 export const cubes = {
   init() {
@@ -80,6 +81,17 @@ export const cubes = {
 export const cube = {
   init(initialState) {
     const state = initialState;;
+
+    if (WEB_WORKER) {
+      collisionWorker.onmessage = function({ data }) {
+        if (typeof data === 'undefined') {
+          return;
+        }
+
+        Actor.send(state.self, [data[0]]);
+      };
+    }
+
     return state;
   },
 
@@ -110,15 +122,27 @@ export const cube = {
       ctx: state.ctx
     };
 
-    Actor.send(collisonDetector,
-      ['validateMove', {
+    if (WEB_WORKER) {
+      collisionWorker.postMessage(JSON.stringify(['validateMove', {
         self: move.self,
         x: move.coord.x,
         y: move.coord.y,
         direction: move.direction,
         w: move.coord.w,
-        h: move.coord.h
-      }]);
+        h: move.coord.h,
+        nextMove: move
+      }]));
+    } else {
+      Actor.send(collisionDetector,
+        ['validateMove', {
+          self: move.self,
+          x: move.coord.x,
+          y: move.coord.y,
+          direction: move.direction,
+          w: move.coord.w,
+          h: move.coord.h
+        }]);
+    }
 
     state.nextMove = move;
 
@@ -157,14 +181,25 @@ export const cube = {
 
     state.ctx.restore();
 
-    Actor.send(collisonDetector, ['didMove', {
-      self: state.self,
-      direction: state.nextMove.direction,
-      x: state.nextMove.coord.x,
-      y: state.nextMove.coord.y,
-      w: state.nextMove.coord.w,
-      h: state.nextMove.coord.h
-    }]);
+    if (WEB_WORKER) {
+      collisionWorker.postMessage(JSON.stringify(['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]));
+    } else {
+      Actor.send(collisionDetector, ['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]);
+    }
 
     return state.nextMove;
   },
@@ -189,14 +224,26 @@ export const cube = {
     );
 
     state.ctx.restore();
-    Actor.send(collisonDetector, ['didMove', {
-      self: state.self,
-      direction: state.nextMove.direction,
-      x: state.nextMove.coord.x,
-      y: state.nextMove.coord.y,
-      w: state.nextMove.coord.w,
-      h: state.nextMove.coord.h
-    }]);
+
+    if (WEB_WORKER) {
+      collisionWorker.postMessage(JSON.stringify(['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]));
+    } else {
+      Actor.send(collisionDetector, ['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]);
+    }
 
     return state.nextMove;
   },
@@ -209,7 +256,10 @@ export const cube = {
       state.coord.h);
 
     state.ctx.save();
+
+    console.log('a');
     state.ctx.fillStyle = `#${state.nextMove.color}`;
+
     state.ctx.fillRect(
       state.nextMove.coord.x,
       state.nextMove.coord.y,
@@ -219,14 +269,25 @@ export const cube = {
 
     state.ctx.restore();
 
-    Actor.send(collisonDetector, ['didMove', {
-      self: state.self,
-      direction: state.nextMove.direction,
-      x: state.nextMove.coord.x,
-      y: state.nextMove.coord.y,
-      w: state.nextMove.coord.w,
-      h: state.nextMove.coord.h
-    }]);
+    if (WEB_WORKER) {
+      collisionWorker.postMessage(JSON.stringify(['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]));
+    } else {
+      Actor.send(collisionDetector, ['didMove', {
+        self: state.self,
+        direction: state.nextMove.direction,
+        x: state.nextMove.coord.x,
+        y: state.nextMove.coord.y,
+        w: state.nextMove.coord.w,
+        h: state.nextMove.coord.h
+      }]);
+    }
 
     return state.nextMove;
   }
